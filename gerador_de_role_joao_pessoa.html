@@ -1,210 +1,49 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0f172a" />
-  <title>Gerador de Rolê — João Pessoa</title>
-  <style>
-    :root {
-      --bg: #0f172a; --card: #1e293b; --text: #f8fafc;
-      --muted: #94a3b8; --accent: #f59e0b; --accent-dark: #d97706;
-      --border: #334155; --link: #7dd3fc;
-    }
-    * { box-sizing: border-box; }
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg); color: var(--text); margin: 0;
-      padding: 28px 16px; min-height: 100vh;
-    }
-    .container { max-width: 760px; width: 100%; margin: 0 auto; }
-    header { margin-bottom: 24px; }
-    h1 { color: var(--accent); margin: 0 0 8px; font-size: clamp(1.65rem, 5vw, 2.1rem); }
-    .intro { color: var(--muted); margin: 0; line-height: 1.5; }
-    form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-    .form-group {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 15px; min-width: 0;
-    }
-    .form-group label { display: block; font-weight: 650; margin-bottom: 9px; }
-    select {
-      width: 100%; padding: 11px 12px; background: var(--bg); color: var(--text);
-      border: 1px solid var(--border); border-radius: 8px; font: inherit;
-    }
-    select:focus-visible, button:focus-visible, a:focus-visible {
-      outline: 2px solid var(--accent); outline-offset: 3px;
-    }
-    .actions { grid-column: 1 / -1; display: flex; gap: 10px; }
-    button {
-      border: 0; border-radius: 10px; padding: 13px 16px; font: inherit;
-      font-weight: 750; cursor: pointer;
-    }
-    .primary { flex: 1; background: var(--accent); color: #111827; }
-    .primary:hover { background: var(--accent-dark); }
-    .secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
-    .results { margin-top: 28px; }
-    .results-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-    .results-heading h2 { font-size: 1.2rem; margin: 0; }
-    .count { color: var(--muted); font-size: .9rem; }
-    .result-card {
-      background: var(--card); border: 1px solid var(--border);
-      border-left: 4px solid var(--accent); border-radius: 10px;
-      padding: 16px; margin-bottom: 12px;
-    }
-    .result-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-    .result-card h3 { margin: 0; font-size: 1.12rem; }
-    .instagram {
-      color: var(--link); text-decoration: none; font-weight: 650;
-      font-size: .9rem; white-space: nowrap;
-    }
-    .instagram:hover { text-decoration: underline; }
-    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
-    .tag {
-      background: rgba(245,158,11,.12); color: #fbbf24; padding: 5px 8px;
-      border-radius: 6px; font-size: .82rem;
-    }
-    .empty-state {
-      text-align: center; color: var(--muted); background: var(--card);
-      padding: 24px; border-radius: 12px; border: 1px dashed var(--border);
-    }
-    .note { color: var(--muted); font-size: .82rem; line-height: 1.45; margin-top: 18px; }
-    @media (max-width: 600px) {
-      form { grid-template-columns: 1fr; }
-      .actions { flex-direction: column; }
-      .result-top { flex-direction: column; gap: 6px; }
-    }
-  </style>
-</head>
-<body>
-  <main class="container">
-    <header>
-      <h1>Descubra o rolê 🎯</h1>
-      <p class="intro">Responda às perguntas e encontre opções em João Pessoa que combinam com seu momento.</p>
-    </header>
-
-    <form id="roleForm">
-      <div class="form-group">
-        <label for="ambiente">Que tipo de espaço você prefere?</label>
-        <select id="ambiente">
-          <option value="Qualquer">Qualquer um</option>
-          <option value="Aberto">Aberto</option>
-          <option value="Fechado">Fechado</option>
-          <option value="Misto">Misto</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="vibe">Qual é a sua vibe hoje?</label>
-        <select id="vibe">
-          <option value="Qualquer">Qualquer vibe</option>
-          <option value="Festa">Festa</option>
-          <option value="Karaokê">Karaokê</option>
-          <option value="Evento cultural">Evento cultural / alternativo</option>
-          <option value="Boteco">Boteco</option>
-          <option value="Pub">Pub</option>
-          <option value="Show">Show</option>
-          <option value="Couvert">Música ao vivo / couvert</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="musica">Quer música ao vivo?</label>
-        <select id="musica">
-          <option value="Indiferente">Indiferente</option>
-          <option value="Sim">Sim</option>
-          <option value="Não">Não</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="comida">Quer um lugar para comer?</label>
-        <select id="comida">
-          <option value="Indiferente">Indiferente</option>
-          <option value="Sim">Sim</option>
-          <option value="Não">Não</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="praia">Onde pode ser?</label>
-        <select id="praia">
-          <option value="Indiferente">Qualquer região</option>
-          <option value="Sim">Apenas na praia</option>
-          <option value="Não">Fora da praia</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="preco">Qual é o seu orçamento por pessoa?</label>
-        <select id="preco">
-          <option value="Qualquer">Sem limite definido</option>
-          <option value="Até R$ 30">Até R$ 30</option>
-          <option value="Até R$ 60">Até R$ 60</option>
-          <option value="Até R$ 90">Até R$ 90</option>
-          <option value="Mais de R$ 90">Mais de R$ 90</option>
-        </select>
-      </div>
-      <div class="actions">
-        <button type="submit" class="primary">Encontrar meu rolê 🎲</button>
-        <button type="reset" class="secondary">Limpar filtros</button>
-      </div>
-    </form>
-
-    <section class="results" id="resultados" aria-live="polite"></section>
-    <p class="note">Os perfis do Instagram são links de busca quando o endereço oficial não foi cadastrado. Confira o perfil e a programação antes de sair; atrações, preços e funcionamento podem mudar.</p>
-  </main>
-
-  <script>
-    // Para cadastrar um perfil oficial, preencha instagram com o @ do estabelecimento,
-    // sem o símbolo @. Exemplo: instagram: "nomedolugar".
-    const lugares = [
-      { nome: "Sabadinho Bom (Praça Rio Branco)", ambiente: "Aberto", vibe: "Evento cultural", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
-      { nome: "Mãe Terra (Praça da Paz)", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 30", instagram: "" },
-      { nome: "Toca Pub", ambiente: "Fechado", vibe: "Karaokê", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Empório Café", ambiente: "Fechado", vibe: "Festa", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "After Pub", ambiente: "Fechado", vibe: "Pub", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Atol Music Bar", ambiente: "Fechado", vibe: "Karaokê", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Private Pub", ambiente: "Fechado", vibe: "Karaokê", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Gringo's Bar", ambiente: "Misto", vibe: "Pub", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
-      { nome: "General Store", ambiente: "Aberto", vibe: "Evento cultural", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Vila do Porto", ambiente: "Misto", vibe: "Evento cultural", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Caravela Cultural", ambiente: "Aberto", vibe: "Evento cultural", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Centrô Bar", ambiente: "Misto", vibe: "Evento cultural", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
-      { nome: "Bar da Cléa", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
-      { nome: "Bar do Bode", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
-      { nome: "Bar Seu João", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Bar do Galo", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
-      { nome: "Convívio Bar", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
-      { nome: "Praça da Paz (Bancários)", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 30", instagram: "" },
-      { nome: "Paralelo Pub", ambiente: "Fechado", vibe: "Pub", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Beer Pub", ambiente: "Fechado", vibe: "Pub", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Esperanto Boteco", ambiente: "Misto", vibe: "Pub", musica: "Sim", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Brasa Espetos e Petiscos", ambiente: "Misto", vibe: "Boteco", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Barzin Espetos & Petiscos", ambiente: "Misto", vibe: "Boteco", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Recanto Três Ruas", ambiente: "Aberto", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Frigideira Bar e Restaurante", ambiente: "Misto", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Donana Pub", ambiente: "Fechado", vibe: "Couvert", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Giramundo Tambaú", ambiente: "Misto", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "BOTECO 55", ambiente: "Misto", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Vintage 21 (V21)", ambiente: "Fechado", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "John People", ambiente: "Fechado", vibe: "Couvert", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Priscylla's Hall (PH)", ambiente: "Fechado", vibe: "Show", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "After Club", ambiente: "Fechado", vibe: "Show", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Dory's Prime", ambiente: "Fechado", vibe: "Show", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Giramundo Cabo Branco", ambiente: "Aberto", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Sim", preco: "Até R$ 60", instagram: "" },
-      { nome: "Fullano Praia", ambiente: "Aberto", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Sim", preco: "Até R$ 60", instagram: "" },
-      { nome: "Praiano Bar", ambiente: "Aberto", vibe: "Pub", musica: "Não", comida: "Não", praia: "Sim", preco: "Até R$ 60", instagram: "" },
-      { nome: "Tropical Bar Quiosque", ambiente: "Aberto", vibe: "Pub", musica: "Não", comida: "Não", praia: "Sim", preco: "Até R$ 30", instagram: "" },
-      { nome: "Tropical Bar", ambiente: "Aberto", vibe: "Pub", musica: "Não", comida: "Não", praia: "Sim", preco: "Até R$ 30", instagram: "" },
-      { nome: "Quiosque Estrela do Mar", ambiente: "Aberto", vibe: "Pub", musica: "Não", comida: "Não", praia: "Sim", preco: "Até R$ 30", instagram: "" },
-      { nome: "Manga Rosa", ambiente: "Aberto", vibe: "Pub", musica: "Não", comida: "Sim", praia: "Sim", preco: "Até R$ 60", instagram: "" },
-      { nome: "Cancun Bar e Restaurante", ambiente: "Aberto", vibe: "Pub", musica: "Não", comida: "Sim", praia: "Sim", preco: "Até R$ 60", instagram: "" },
-      { nome: "Goa Shantti Beach Lounge", ambiente: "Aberto", vibe: "Festa", musica: "Sim", comida: "Sim", praia: "Sim", preco: "Até R$ 90", instagram: "" },
-      { nome: "Praiô Beach Club", ambiente: "Aberto", vibe: "Festa", musica: "Sim", comida: "Sim", praia: "Sim", preco: "Até R$ 90", instagram: "" },
-      { nome: "Lovina Seixas", ambiente: "Aberto", vibe: "Festa", musica: "Sim", comida: "Sim", praia: "Sim", preco: "Mais de R$ 90", instagram: "" },
-      { nome: "Lolla's Lounge Bar", ambiente: "Aberto", vibe: "Pub", musica: "Não", comida: "Sim", praia: "Sim", preco: "Até R$ 90", instagram: "" },
-      { nome: "Bessa Grill", ambiente: "Aberto", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Sim", preco: "Até R$ 60", instagram: "" },
-      { nome: "Dona Branca", ambiente: "Misto", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Bar do Cuscuz", ambiente: "Misto", vibe: "Show", musica: "Sim", comida: "Sim", praia: "Sim", preco: "Até R$ 90", instagram: "" },
-      { nome: "Zimbro Drinks e Tapas", ambiente: "Fechado", vibe: "Pub", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 90", instagram: "" },
-      { nome: "Na Casa de Joca", ambiente: "Aberto", vibe: "Evento cultural", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
-      { nome: "Skybar Tour Genève", ambiente: "Aberto", vibe: "Pub", musica: "Não", comida: "Sim", praia: "Não", preco: "Mais de R$ 90", instagram: "" },
-      { nome: "Ecco Pizzas Artesanais", ambiente: "Fechado", vibe: "Couvert", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 90", instagram: "" }
+"Karaokê", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Private Pub", busca: "Private Pub Bessa João Pessoa", bairro: "Bessa", regiao: "Orla", ambiente: "Fechado", vibe: "Karaokê", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Gringo's Bar", busca: "Gringos Bar Tambaú João Pessoa", bairro: "Tambaú", regiao: "Orla", ambiente: "Misto", vibe: "Pub", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
+      { nome: "General Store", busca: "General Store Centro João Pessoa", bairro: "Centro", regiao: "Centro Histórico", ambiente: "Aberto", vibe: "Evento cultural", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Vila do Porto", busca: "Vila do Porto Varadouro João Pessoa", bairro: "Varadouro", regiao: "Centro Histórico", ambiente: "Misto", vibe: "Evento cultural", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Caravela Cultural", busca: "Caravela Cultural Varadouro João Pessoa", bairro: "Varadouro", regiao: "Centro Histórico", ambiente: "Misto", vibe: "Evento cultural", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Centrô Bar", busca: "Centrô Bar Centro João Pessoa", bairro: "Centro", regiao: "Centro Histórico", ambiente: "Misto", vibe: "Evento cultural", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
+      { nome: "Bar da Cléa", busca: "Bar da Clea Castelo Branco João Pessoa", bairro: "Castelo Branco", regiao: "Zona Sul", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
+      { nome: "Bar do Bode", busca: "Bar do Bode Bancários João Pessoa", bairro: "Bancários", regiao: "Zona Sul", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
+      { nome: "Bar Seu João", busca: "Bar Seu João Jardim Oceania João Pessoa", bairro: "Jardim Oceania", regiao: "Orla", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Bar do Galo", busca: "Bar do Galo Torre João Pessoa", bairro: "Torre", regiao: "Outros bairros", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
+      { nome: "Convívio Bar", busca: "Convívio Bar Bancários João Pessoa", bairro: "Bancários", regiao: "Zona Sul", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
+      { nome: "Praça da Paz (Bancários)", busca: "Praça da Paz Bancários João Pessoa", bairro: "Bancários", regiao: "Zona Sul", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 30", instagram: "" },
+      { nome: "Paralelo Pub", busca: "Paralelo Pub Bairro dos Estados João Pessoa", bairro: "Estados", regiao: "Outros bairros", ambiente: "Fechado", vibe: "Pub", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Beer Pub", busca: "Beer Pub Manaíra João Pessoa", bairro: "Manaíra", regiao: "Orla", ambiente: "Fechado", vibe: "Pub", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Esperanto Boteco", busca: "Esperanto Boteco Bessa João Pessoa", bairro: "Bessa", regiao: "Orla", ambiente: "Fechado", vibe: "Pub", musica: "Sim", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Brasa Espetos e Petiscos", busca: "Brasa Espetos Bancários João Pessoa", bairro: "Bancários", regiao: "Zona Sul", ambiente: "Misto", vibe: "Boteco", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Barzin Espetos & Petiscos", busca: "Barzin Espetos Bessa João Pessoa", bairro: "Bessa", regiao: "Orla", ambiente: "Misto", vibe: "Boteco", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Recanto Três Ruas", busca: "Recanto Três Ruas Bancários João Pessoa", bairro: "Bancários", regiao: "Zona Sul", ambiente: "Aberto", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Frigideira Bar e Restaurante", busca: "Frigideira Bar Bessa João Pessoa", bairro: "Bessa", regiao: "Orla", ambiente: "Fechado", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Donana Pub", busca: "Donana Pub Cabo Branco João Pessoa", bairro: "Cabo Branco", regiao: "Orla", ambiente: "Fechado", vibe: "Couvert", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Giramundo Tambaú", busca: "Giramundo Tambaú João Pessoa", bairro: "Tambaú", regiao: "Orla", ambiente: "Fechado", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "BOTECO 55", busca: "Boteco 55 Manaíra João Pessoa", bairro: "Manaíra", regiao: "Orla", ambiente: "Misto", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Vintage 21 (V21)", busca: "Vintage 21 Cabo Branco João Pessoa", bairro: "Cabo Branco", regiao: "Orla", ambiente: "Fechado", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "John People", busca: "John People Manaíra João Pessoa", bairro: "Manaíra", regiao: "Orla", ambiente: "Fechado", vibe: "Couvert", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Priscylla's Hall (PH)", busca: "Priscylla's Hall João Pessoa", bairro: "Mandacaru", regiao: "Outros bairros", ambiente: "Fechado", vibe: "Show", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "After Club", busca: "After Club Manaíra João Pessoa", bairro: "Manaíra", regiao: "Orla", ambiente: "Fechado", vibe: "Show", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Dory's Prime", busca: "Dorys Prime Bessa João Pessoa", bairro: "Bessa", regiao: "Orla", ambiente: "Fechado", vibe: "Show", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Giramundo Cabo Branco", busca: "Giramundo Cabo Branco João Pessoa", bairro: "Cabo Branco", regiao: "Orla", ambiente: "Fechado", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Sim", preco: "Até R$ 60", instagram: "" },
+      { nome: "Fullano Praia", busca: "Fullano Praia Bessa João Pessoa", bairro: "Bessa", regiao: "Orla", ambiente: "Aberto", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Sim", preco: "Até R$ 60", instagram: "" },
+      { nome: "Praiano Bar", busca: "Praiano Bar Bessa João Pessoa", bairro: "Bessa", regiao: "Orla", ambiente: "Aberto", vibe: "Pub", musica: "Não", comida: "Não", praia: "Sim", preco: "Até R$ 60", instagram: "" },
+      { nome: "Tropical Bar Quiosque", busca: "Quiosque Tropical Bar Cabo Branco João Pessoa", bairro: "Cabo Branco", regiao: "Orla", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Não", praia: "Sim", preco: "Até R$ 30", instagram: "" },
+      { nome: "Tropical Bar", busca: "Tropical Bar Tambaú João Pessoa", bairro: "Tambaú", regiao: "Orla", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Não", praia: "Sim", preco: "Até R$ 30", instagram: "" },
+      { nome: "Quiosque Estrela do Mar", busca: "Quiosque Estrela do Mar Cabo Branco João Pessoa", bairro: "Cabo Branco", regiao: "Orla", ambiente: "Aberto", vibe: "Pub", musica: "Não", comida: "Não", praia: "Sim", preco: "Até R$ 30", instagram: "" },
+      { nome: "Cancun Bar e Restaurante", busca: "Cancun Bar Bessa João Pessoa", bairro: "Bessa", regiao: "Orla", ambiente: "Aberto", vibe: "Pub", musica: "Não", comida: "Sim", praia: "Sim", preco: "Até R$ 60", instagram: "" },
+      { nome: "Goa Shantti Beach Lounge", busca: "Goa Shantti Praia do Seixas João Pessoa", bairro: "Seixas", regiao: "Orla", ambiente: "Aberto", vibe: "Festa", musica: "Sim", comida: "Sim", praia: "Sim", preco: "Até R$ 90", instagram: "" },
+      { nome: "Praiô Beach Club", busca: "Praiô Beach Club Ponta do Seixas João Pessoa", bairro: "Ponta do Seixas", regiao: "Orla", ambiente: "Aberto", vibe: "Festa", musica: "Sim", comida: "Sim", praia: "Sim", preco: "Até R$ 90", instagram: "" },
+      { nome: "Lovina Seixas", busca: "Lovina Ponta do Seixas João Pessoa", bairro: "Ponta do Seixas", regiao: "Orla", ambiente: "Aberto", vibe: "Festa", musica: "Sim", comida: "Sim", praia: "Sim", preco: "Mais de R$ 90", instagram: "" },
+      { nome: "Lolla's Lounge Bar", busca: "Lollas Lounge Bar Cabo Branco João Pessoa", bairro: "Cabo Branco", regiao: "Orla", ambiente: "Aberto", vibe: "Pub", musica: "Não", comida: "Sim", praia: "Sim", preco: "Até R$ 90", instagram: "" },
+      { nome: "Bessa Grill", busca: "Bessa Grill Bessa João Pessoa", bairro: "Bessa", regiao: "Orla", ambiente: "Aberto", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Sim", preco: "Até R$ 60", instagram: "" },
+      { nome: "Dona Branca", busca: "Dona Branca Manaíra João Pessoa", bairro: "Manaíra", regiao: "Orla", ambiente: "Misto", vibe: "Couvert", musica: "Sim", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Bar do Cuscuz", busca: "Bar do Cuscuz Cabo Branco João Pessoa", bairro: "Cabo Branco", regiao: "Orla", ambiente: "Misto", vibe: "Boteco", musica: "Sim", comida: "Sim", praia: "Sim", preco: "Até R$ 90", instagram: "" },
+      { nome: "Zimbro Drinks e Tapas", busca: "Zimbro Drinks e Tapas Cabo Branco João Pessoa", bairro: "Cabo Branco", regiao: "Orla", ambiente: "Fechado", vibe: "Pub", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 90", instagram: "" },
+      { nome: "Na Casa de Joca", busca: "Na Casa de Joca Miramar João Pessoa", bairro: "Miramar", regiao: "Outros bairros", ambiente: "Aberto", vibe: "Evento cultural", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Skybar Tour Genève", busca: "Skybar Tour Geneve Altiplano João Pessoa", bairro: "Altiplano", regiao: "Outros bairros", ambiente: "Aberto", vibe: "Pub", musica: "Não", comida: "Sim", praia: "Não", preco: "Mais de R$ 90", instagram: "" },
+      { nome: "Ecco Pizzas Artesanais", busca: "Ecco Pizzas Artesanais Manaíra João Pessoa", bairro: "Manaíra", regiao: "Orla", ambiente: "Fechado", vibe: "Couvert", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 90", instagram: "" }
     ];
 
     const niveisPreco = { "Até R$ 30": 1, "Até R$ 60": 2, "Até R$ 90": 3, "Mais de R$ 90": 4 };
@@ -214,13 +53,25 @@
     function linkInstagram(lugar) {
       const url = lugar.instagram
         ? `https://www.instagram.com/${encodeURIComponent(lugar.instagram.replace(/^@/, ""))}/`
-        : `https://www.google.com/search?q=${encodeURIComponent(lugar.nome + " João Pessoa Instagram oficial")}`;
+        : `https://www.google.com/search?q=${encodeURIComponent((lugar.busca || lugar.nome) + " Instagram oficial")}`;
       const texto = lugar.instagram ? "Instagram ↗" : "Buscar Instagram ↗";
-      return `<a class="instagram" href="${url}" target="_blank" rel="noopener noreferrer">${texto}</a>`;
+      return `<a class="btn-link btn-instagram" href="${url}" target="_blank" rel="noopener noreferrer">📷 ${texto}</a>`;
+    }
+
+    function linkGoogleMaps(lugar) {
+      const query = encodeURIComponent(lugar.busca || `${lugar.nome}, ${lugar.bairro}, João Pessoa - PB`);
+      // URL padronizada do Google Maps que funciona universalmente no PC, Android e iOS
+      const urlMaps = `https://www.google.com/maps/search/?api=1&query=${query}`;
+      const urlRota = `https://www.google.com/maps/dir/?api=1&destination=${query}`;
+      return `
+        <a class="btn-link btn-maps" href="${urlMaps}" target="_blank" rel="noopener noreferrer">📍 Ver no Maps</a>
+        <a class="btn-link btn-rota" href="${urlRota}" target="_blank" rel="noopener noreferrer">🚗 Como Chegar</a>
+      `;
     }
 
     function filtrarRoles(event) {
       if (event) event.preventDefault();
+      const regiao = document.getElementById("regiao").value;
       const ambiente = document.getElementById("ambiente").value;
       const vibe = document.getElementById("vibe").value;
       const musica = document.getElementById("musica").value;
@@ -229,6 +80,7 @@
       const preco = document.getElementById("preco").value;
 
       const resultados = lugares.filter(item => {
+        if (regiao !== "Qualquer" && item.regiao !== regiao) return false;
         if (ambiente !== "Qualquer" && item.ambiente !== ambiente && item.ambiente !== "Misto") return false;
         if (vibe !== "Qualquer" && item.vibe !== vibe) return false;
         if (musica !== "Indiferente" && item.musica !== musica) return false;
@@ -240,7 +92,7 @@
 
       container.innerHTML = "";
       if (!resultados.length) {
-        container.innerHTML = `<div class="empty-state"><h3>Nenhum rolê encontrado 😕</h3><p>Tente flexibilizar algum filtro, como orçamento ou vibe.</p></div>`;
+        container.innerHTML = `<div class="empty-state"><h3>Nenhum rolê encontrado 😕</h3><p>Tente flexibilizar algum filtro, como orçamento, região ou vibe.</p></div>`;
         return;
       }
 
@@ -249,23 +101,30 @@
       heading.innerHTML = `<h2>Opções para o seu rolê</h2><span class="count">${resultados.length} resultado(s)</span>`;
       container.appendChild(heading);
 
-      // Embaralha a ordem para variar as sugestões, sem alterar os filtros.
       const embaralhados = [...resultados].sort(() => Math.random() - 0.5);
       embaralhados.forEach(item => {
         const card = document.createElement("article");
         card.className = "result-card";
+        
         const topo = document.createElement("div");
         topo.className = "result-top";
+        
+        const infoTitulo = document.createElement("div");
         const titulo = document.createElement("h3");
         titulo.textContent = item.nome;
-        topo.appendChild(titulo);
-        topo.insertAdjacentHTML("beforeend", linkInstagram(item));
+        const bairroSpan = document.createElement("span");
+        bairroSpan.className = "bairro-badge";
+        bairroSpan.textContent = `📍 ${item.bairro} (${item.regiao})`;
+        
+        infoTitulo.appendChild(titulo);
+        infoTitulo.appendChild(bairroSpan);
+        topo.appendChild(infoTitulo);
         card.appendChild(topo);
 
         const tags = document.createElement("div");
         tags.className = "tags";
         [
-          `📍 ${item.ambiente}`,
+          `🏠 ${item.ambiente}`,
           `🎭 ${item.vibe}`,
           `🎵 Música ao vivo: ${item.musica}`,
           `🍽️ Comer bem: ${item.comida}`,
@@ -278,6 +137,12 @@
           tags.appendChild(tag);
         });
         card.appendChild(tags);
+
+        const linksGroup = document.createElement("div");
+        linksGroup.className = "links-group";
+        linksGroup.innerHTML = linkInstagram(item) + linkGoogleMaps(item);
+        card.appendChild(linksGroup);
+
         container.appendChild(card);
       });
     }
