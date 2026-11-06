@@ -1,4 +1,195 @@
-"Karaokê", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Gerador de Rolê — João Pessoa (V5 Corrigida)</title>
+  <style>
+    :root {
+      --bg: #0f172a; --card: #1e293b; --text: #f8fafc;
+      --muted: #94a3b8; --accent: #f59e0b; --accent-dark: #d97706;
+      --border: #334155; --link: #7dd3fc; --maps: #34d399; --maps-dark: #059669;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg); color: var(--text); margin: 0;
+      padding: 28px 16px; min-height: 100vh;
+    }
+    .container { max-width: 780px; width: 100%; margin: 0 auto; }
+    header { margin-bottom: 24px; }
+    h1 { color: var(--accent); margin: 0 0 8px; font-size: clamp(1.65rem, 5vw, 2.1rem); }
+    .intro { color: var(--muted); margin: 0; line-height: 1.5; }
+    form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .form-group {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 15px; min-width: 0;
+    }
+    .form-group label { display: block; font-weight: 650; margin-bottom: 9px; }
+    select {
+      width: 100%; padding: 11px 12px; background: var(--bg); color: var(--text);
+      border: 1px solid var(--border); border-radius: 8px; font: inherit;
+    }
+    select:focus-visible, button:focus-visible, a:focus-visible {
+      outline: 2px solid var(--accent); outline-offset: 3px;
+    }
+    .actions { grid-column: 1 / -1; display: flex; gap: 10px; }
+    button {
+      border: 0; border-radius: 10px; padding: 13px 16px; font: inherit;
+      font-weight: 750; cursor: pointer;
+    }
+    .primary { flex: 1; background: var(--accent); color: #111827; }
+    .primary:hover { background: var(--accent-dark); }
+    .secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .results { margin-top: 28px; }
+    .results-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .results-heading h2 { font-size: 1.2rem; margin: 0; }
+    .count { color: var(--muted); font-size: .9rem; }
+    .result-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-left: 4px solid var(--accent); border-radius: 10px;
+      padding: 16px; margin-bottom: 14px;
+    }
+    .result-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .result-card h3 { margin: 0; font-size: 1.15rem; }
+    .bairro-badge {
+      display: inline-block; font-size: 0.8rem; font-weight: 500;
+      color: var(--muted); margin-top: 2px;
+    }
+    .links-group {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;
+      align-items: center; border-top: 1px dashed var(--border); padding-top: 10px;
+    }
+    .btn-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      text-decoration: none; font-weight: 600; font-size: .85rem;
+      padding: 6px 10px; border-radius: 6px; transition: background 0.2s;
+    }
+    .btn-instagram { background: rgba(125, 211, 252, 0.12); color: var(--link); }
+    .btn-instagram:hover { background: rgba(125, 211, 252, 0.22); }
+    .btn-maps { background: rgba(52, 211, 153, 0.15); color: var(--maps); }
+    .btn-maps:hover { background: rgba(52, 211, 153, 0.28); }
+    .btn-rota { background: rgba(245, 158, 11, 0.15); color: var(--accent); }
+    .btn-rota:hover { background: rgba(245, 158, 11, 0.28); }
+    
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+    .tag {
+      background: rgba(245,158,11,.12); color: #fbbf24; padding: 5px 8px;
+      border-radius: 6px; font-size: .82rem;
+    }
+    .empty-state {
+      text-align: center; color: var(--muted); background: var(--card);
+      padding: 24px; border-radius: 12px; border: 1px dashed var(--border);
+    }
+    .note { color: var(--muted); font-size: .82rem; line-height: 1.45; margin-top: 18px; }
+    @media (max-width: 600px) {
+      form { grid-template-columns: 1fr; }
+      .actions { flex-direction: column; }
+      .result-top { flex-direction: column; gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>Descubra o rolê 🎯</h1>
+      <p class="intro">Responda às perguntas e encontre opções em João Pessoa que combinam com seu momento.</p>
+    </header>
+
+    <form id="roleForm">
+      <div class="form-group">
+        <label for="regiao">Região / Bairro?</label>
+        <select id="regiao">
+          <option value="Qualquer">Todas as Regiões</option>
+          <option value="Orla">Orla (Bessa, Manaíra, Tambaú, Cabo Branco, Seixas)</option>
+          <option value="Centro Histórico">Centro Histórico e Varadouro</option>
+          <option value="Zona Sul">Zona Sul (Bancários, Mangabeira, Castelo Branco)</option>
+          <option value="Outros bairros">Outros bairros (Torre, Estados, Bairro dos Ipês, etc.)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="ambiente">Que tipo de espaço você prefere?</label>
+        <select id="ambiente">
+          <option value="Qualquer">Qualquer um</option>
+          <option value="Aberto">Aberto</option>
+          <option value="Fechado">Fechado</option>
+          <option value="Misto">Misto</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="vibe">Qual é a sua vibe hoje?</label>
+        <select id="vibe">
+          <option value="Qualquer">Qualquer vibe</option>
+          <option value="Festa">Festa</option>
+          <option value="Karaokê">Karaokê</option>
+          <option value="Evento cultural">Evento cultural / alternativo</option>
+          <option value="Boteco">Boteco</option>
+          <option value="Pub">Pub</option>
+          <option value="Show">Show</option>
+          <option value="Couvert">Música ao vivo / couvert</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="musica">Quer música ao vivo?</label>
+        <select id="musica">
+          <option value="Indiferente">Indiferente</option>
+          <option value="Sim">Sim</option>
+          <option value="Não">Não</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="comida">Quer um lugar para comer?</label>
+        <select id="comida">
+          <option value="Indiferente">Indiferente</option>
+          <option value="Sim">Sim</option>
+          <option value="Não">Não</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="praia">Pode ser na praia?</label>
+        <select id="praia">
+          <option value="Indiferente">Qualquer localização</option>
+          <option value="Sim">Apenas na praia</option>
+          <option value="Não">Fora da praia</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="preco">Qual é o seu orçamento por pessoa?</label>
+        <select id="preco">
+          <option value="Qualquer">Sem limite definido</option>
+          <option value="Até R$ 30">Até R$ 30</option>
+          <option value="Até R$ 60">Até R$ 60</option>
+          <option value="Até R$ 90">Até R$ 90</option>
+          <option value="Mais de R$ 90">Mais de R$ 90</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="primary">Encontrar meu rolê 🎲</button>
+        <button type="reset" class="secondary">Limpar filtros</button>
+      </div>
+    </form>
+
+    <section class="results" id="resultados" aria-live="polite"></section>
+    <p class="note">Links do Google Maps abrem a localização oficial e navegação GPS precisa. Confira sempre o horário e a programação atualizada nos perfis antes de sair.</p>
+  </main>
+
+  <script>
+    // Base de dados V5 otimizada para Google Maps (com buscas limpas sem parênteses ou nomes informais)
+    const lugares = [
+      { nome: "Sabadinho Bom (Praça Rio Branco)", busca: "Praça Rio Branco Centro João Pessoa", bairro: "Centro", regiao: "Centro Histórico", ambiente: "Aberto", vibe: "Evento cultural", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
+      { nome: "Mãe Terra (Praça da Paz)", busca: "Mãe Terra Praça da Paz Bancários João Pessoa", bairro: "Bancários", regiao: "Zona Sul", ambiente: "Aberto", vibe: "Boteco", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 30", instagram: "" },
+      { nome: "Toca Pub", busca: "Toca Pub Manaíra João Pessoa", bairro: "Manaíra", regiao: "Orla", ambiente: "Fechado", vibe: "Karaokê", musica: "Não", comida: "Sim", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Empório Café", busca: "Empório Café Tambaú João Pessoa", bairro: "Tambaú", regiao: "Orla", ambiente: "Fechado", vibe: "Festa", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "After Pub", busca: "After Pub Manaíra João Pessoa", bairro: "Manaíra", regiao: "Orla", ambiente: "Fechado", vibe: "Pub", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
+      { nome: "Atol Music Bar", busca: "Atol Music Bar Tambaú João Pessoa", bairro: "Tambaú", regiao: "Orla", ambiente: "Fechado", vibe: "Karaokê", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
       { nome: "Private Pub", busca: "Private Pub Bessa João Pessoa", bairro: "Bessa", regiao: "Orla", ambiente: "Fechado", vibe: "Karaokê", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
       { nome: "Gringo's Bar", busca: "Gringos Bar Tambaú João Pessoa", bairro: "Tambaú", regiao: "Orla", ambiente: "Misto", vibe: "Pub", musica: "Não", comida: "Não", praia: "Não", preco: "Até R$ 30", instagram: "" },
       { nome: "General Store", busca: "General Store Centro João Pessoa", bairro: "Centro", regiao: "Centro Histórico", ambiente: "Aberto", vibe: "Evento cultural", musica: "Sim", comida: "Não", praia: "Não", preco: "Até R$ 60", instagram: "" },
